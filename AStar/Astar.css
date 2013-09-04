@@ -21,3 +21,15 @@
 	background:gray;
 	float:left;
 }
+
+.start{
+	background:green;
+}
+
+.destination{
+	background:red;
+}
+
+.center{
+	background:yellow;
+}
