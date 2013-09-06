@@ -28,6 +28,7 @@ var Node = function($div){
 	this.walkable = true;
 	this.parent = null;
 	this.cost = 1;
+	this.costMultiplier=1.0;
 	
 	var temp_x = $div.attr('x');
 	var temp_y = $div.attr('y');
@@ -62,7 +63,7 @@ var Grid = function(div_array){
 
 Grid.prototype = {
 	getNode:function(x, y){
-		this._nodes[x][y].$div.addClass('center');
+		//this._nodes[x][y].$div.addClass('center');
 		return this._nodes[x][y];
 	},
 	setEndNode:function(x, y){
@@ -77,7 +78,7 @@ Grid.prototype = {
 		this._nodes[x][y].walkable = bool;
 	},
 	getEndNode:function(){
-		return this._EndNode;
+		return this._endNode;
 	},
 	getStartNode:function(){
 		return this._startNode;
@@ -131,12 +132,27 @@ var AStar = function(){
 	this._straightCost = 1;
 	this._diagCost = Math.SQRT2;
 	
-	var nodes = new Grid(div_array);
-	nodes.setStartNode(1, 1);
-	nodes.setEndNode(3, 5);
-	this._startNode = nodes._startNde;
-	this._endNode = nodes._endNode;
-	this._centerNode = nodes.getNode(1, 2);
+	var grids = new Grid(div_array);
+	grids.setStartNode(1, 1);
+	grids.setEndNode(3, 5);
+	this._grids = grids;
+	this._numCols = this._grids._numCols;
+	this._numRows = this._grids._numRows;
+	this._startNode = this._grids.getStartNode();
+	this._endNode = this._grids.getEndNode();
+	this._centerNode = this._grids.getNode(1, 2);
+	
+	//_startNode F G H
+	//console.log(this._startNode);
+	//console.log(this._endNode);
+	this._startNode.G = 0;
+	this._startNode.H = this.diagonal(this._startNode);
+	this._startNode.F = this._startNode.G + this._startNode.H;
+	var str = '<p>f='+this._startNode.F+'</p>' + 
+					'<p>g='+this._startNode.G+'</p>' +
+					'<p>h='+this._startNode.H+'</p>';
+				
+	this._startNode.$div.empty().append(str);
 }
 
 AStar.prototype = {
@@ -158,7 +174,86 @@ AStar.prototype = {
 		var diag = Math.min(dx, dy);
 		var straight = dx + dy;
 		return this._diagCost * diag + this._straightCost * (straight - 2 * diag);
-	}
+	},
+	isOpen:function(node){
+		for(var i = 0; i < this._open.length; i++){
+			if(this._open[i] == node){
+				return true;
+			}
+		}
+		return false;
+	},
+	isClose:function(node){
+		for(var i = 0; i < this._close.length; i++){
+			if(this._close[i] == node){
+				return true;
+			}
+		}		
+		return false;
+	},
+	search:function(){
+		var _t = 1;
+		var node = this._startNode;
+		while(node != this._endNode){
+			var startX = Math.max(0, node.x - 1);
+			var endX = Math.min(this._numCols - 1, node.x + 1);
+			var startY = Math.max(0, node.y - 1);
+			var endY = Math.min(this._numRows - 1, node.y + 1);
+			for(var i = startX; i <= endX; i++){
+				for(var j = startY; j <= endY; j++){
+					var test = this._grids.getNode(i, j);
+					if(test == node ){//test == node || !test.walkable
+						continue;
+					}
+					
+					var cost = this._straightCost;
+					if(!(( node.x == test.x) || (node.y == test.y))){
+						cost = this._diagCost;
+					}
+					
+					var G = node.G + cost * test.costMultiplier;
+					var H = this.diagonal(test);
+					var F = G + H;
+					
+					if(this.isOpen(test) || this.isClose(test)){
+						if(F < test.F){
+							console.log("第", _t, "轮, 有节点重新指向，x=", i, "y=", j, "，g=", g, "，h=",h, "，f=",f, "，test=", test.toString());
+							test.F = F;
+							test.G = G;
+							test.H = H;
+							test.parent = node;
+						}
+					}else{//不在open close 表中时
+						test.F = F;
+						test.G = G;
+						test.H = H;
+						test.parent = node;
+						this._open.push(test);
+					}
+					var str = '<p>f='+test.F+'</p>' + 
+							'<p>g='+test.G+'</p>' +
+							'<p>h='+test.H+'</p>';
+					test.$div.empty().append(str);
+				}
+			}
+			this._close.push(node);
+			
+			if(this._open.length == 0){
+				console.log("没有找到最佳节点，无路可走！");
+				return false;
+			}
+			
+			this._open.sort(function(a, b){
+				return a.G > b.G;
+			});
+			
+			node = this._open.pop();
+			node.$div.addClass('start');
+			console.log("pop", node);
+			_t++;
+		}
+	},
+	
 }
 
 
@@ -195,7 +290,9 @@ $(function() {
 	create_div($("#box"), 100, 100);
 	generate_div_array();
 	
-	var test = new GridTest();
+	//var test = new GridTest();
+	var astar = new AStar();
+	astar.search();
 });
 
 
