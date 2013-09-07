@@ -76,49 +76,13 @@ Grid.prototype = {
 	},
 	setWalkable:function(x, y, bool){
 		this._nodes[x][y].walkable = bool;
+		this._nodes[x][y].$div.addClass('block');
 	},
 	getEndNode:function(){
 		return this._endNode;
 	},
 	getStartNode:function(){
 		return this._startNode;
-	}
-}
-
-var GridTest = function(){
-	this._endNode = null;
-	this._startNde = null;
-	this._centerNode = null;
-	this._straightCost = 1;
-	this._diagCost = Math.SQRT2;
-	
-	var nodes = new Grid(div_array);
-	nodes.setStartNode(1, 1);
-	nodes.setEndNode(3, 5);
-	this._startNode = nodes._startNde;
-	this._endNode = nodes._endNode;
-	this._centerNode = nodes.getNode(1, 2);
-}
-
-GridTest.prototype = {
-	//曼哈顿估价法
-	manhattan:function(node){
-		return Math.abs(node.x - this._endNode.x) * this._straightCost + Math.abs(node.y - this._endNode.y) * this._straightCost;
-	},
-	//几何估价法
-	euclidian:function(node){
-		var dx = node.x - this._endNode.x;
-		var dy = node.y - this._endNode.y;
-		
-		return Math.sqrt(dx * dx + dy * dy) * this._straightCost;
-	},
-	//对角线估价法
-	diagonal:function(node){
-		var dx = Math.abs(node.x - this._endNode.x);
-		var dy = Math.abs(node.y - this._endNode.y);
-		var diag = Math.min(dx, dy);
-		var straight = dx + dy;
-		return this._diagCost * diag + this._straightCost * (straight - 2 * diag);
 	}
 }
 
@@ -134,8 +98,11 @@ var AStar = function(){
 	
 	var grids = new Grid(div_array);
 	grids.setStartNode(1, 1);
-	grids.setEndNode(3, 5);
+	grids.setEndNode(3, 6);
 	this._grids = grids;
+	this._grids.setWalkable(2,5);
+	this._grids.setWalkable(3,5);
+	this._grids.setWalkable(4,5);
 	this._numCols = this._grids._numCols;
 	this._numRows = this._grids._numRows;
 	this._startNode = this._grids.getStartNode();
@@ -202,7 +169,8 @@ AStar.prototype = {
 			for(var i = startX; i <= endX; i++){
 				for(var j = startY; j <= endY; j++){
 					var test = this._grids.getNode(i, j);
-					if(test == node ){//test == node || !test.walkable
+					//if(test == node ){//test == node || !test.walkable
+					if(test == node || !test.walkable){
 						continue;
 					}
 					
@@ -211,7 +179,8 @@ AStar.prototype = {
 						cost = this._diagCost;
 					}
 					
-					var G = node.G + cost * test.costMultiplier;
+					//var G = node.G + cost * test.costMultiplier;
+					var G = cost * test.costMultiplier;
 					var H = this.diagonal(test);
 					var F = G + H;
 					
@@ -273,16 +242,6 @@ function generate_div_array(){
 	});
 	//console.log(div_array.length + '----' + div_array[0].length);
 	//console.log(div_array);
-}
-
-GridTest.prototype.GridTest = function(){
-	var _gl = this.diagonal(this._centerNode, this._startNode);
-	for(var i = 0; i <= 3; i++)
-	{
-		for(var j = 0; j <= 2; j++){
-			//var 
-		}
-	}
 }
 
 $(function() {
