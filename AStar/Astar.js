@@ -217,7 +217,7 @@ AStar.prototype = {
 					
 					if(this.isOpen(test) || this.isClose(test)){
 						if(F < test.F){
-							console.log("第", _t, "轮, 有节点重新指向，x=", i, "y=", j, "，g=", g, "，h=",h, "，f=",f, "，test=", test.toString());
+							//console.log("第", _t, "轮, 有节点重新指向，x=", i, "y=", j, "，g=", g, "，h=",h, "，f=",f, "，test=", test.toString());
 							test.F = F;
 							test.G = G;
 							test.H = H;
@@ -244,7 +244,7 @@ AStar.prototype = {
 			}
 			
 			this._open.sort(function(a, b){
-				return a.G > b.G;
+				return a.F < b.F;
 			});
 			
 			node = this._open.pop();
