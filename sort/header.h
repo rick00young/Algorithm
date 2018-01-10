@@ -16,3 +16,17 @@ void swap(SqList *L, int i, int j){
 	L->r[i] = L->r[j];
 	L->r[j] = temp;
 }
+
+/**
+ * [bubble_print description]
+ * @param L [description]
+ */
+void sqlist_print(SqList *L){
+	if (L == NULL){
+		return;
+	}
+	for (int i = 1; i < L->length; ++i)
+    {
+    	printf("%d\n", L->r[i]);
+    }
+}

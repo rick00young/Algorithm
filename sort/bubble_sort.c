@@ -9,7 +9,7 @@
 void bubble_sort_0(SqList *L);
 void bubble_sort(SqList *L);
 void bubble_sort_2(SqList *L);
-void bubble_print(SqList *L);
+// void bubble_print(SqList *L);
 
 int main( int argc, char *argv[] ) /* 带参数形式 */
 {
@@ -20,25 +20,17 @@ int main( int argc, char *argv[] ) /* 带参数形式 */
     	L->r[i+1] = a[i];
     }
     printf("---origin data----\n");
-    bubble_print(L);
+    sqlist_print(L);
 
     // bubble_sort_0(L);
     // bubble_sort(L);
     bubble_sort_2(L);
     printf("---sorted data----\n");
-    bubble_print(L);
+    sqlist_print(L);
     return 0;
 }
 
-void bubble_print(SqList *L){
-	if (L == NULL){
-		return;
-	}
-	for (int i = 1; i < L->length; ++i)
-    {
-    	printf("%d\n", L->r[i]);
-    }
-}
+
 
 void bubble_sort_0(SqList *L){
 	int i, j;
