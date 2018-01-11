@@ -26,3 +26,9 @@ typedef struct Node
 typedef struct Node *LinkList;
 
 
+typedef struct DulNode
+{
+    ElemType data;
+    struct DulNode *prev;//直接前驱指针
+    struct DulNode *next;//直接后驱指针
+}DulNode, *DulLinkList;
