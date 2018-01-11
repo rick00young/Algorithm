@@ -4,7 +4,8 @@
 #include "../search/header.h"
 
 /**
- * 选择排序需要比较n(n-1)/2,复杂度为O(n^2),但它交换数据的次数要比冒泡排序少
+ * 选择排序需要比较n(n-1)/2,复杂度为O(n^2),
+ * 但它交换数据的次数要比冒泡排序少
  * @param L [description]
  */
 void select_sort(SqList *L);
