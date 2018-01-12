@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "header.h"
 
+//二叉排序树以链接的方式存储,保持了链接存储结构在执行
+//插入和删除操作时不用移动元素的特点,性能比较好.
+//其查找复杂度为O(logn),最坏为O(n)
 
 typedef struct BiTNode
 {

@@ -39,5 +39,25 @@ typedef struct LinkStack
 }LinkStack;
 
 
+// queue
+typedef struct
+{
+    EleType data[MAXSIZE];
+    int front;
+    int rear;
+} SqQueue;
+
+
+typedef struct QNode
+{
+    EleType data;
+    struct QNode *next;
+}QNode, *QueuePtr;
+
+typedef struct
+{
+    QueuePtr front, rear;
+}LinkQueue;
+
 
 
