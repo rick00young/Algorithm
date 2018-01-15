@@ -34,8 +34,7 @@ int main( int argc, char *argv[] ) /* 带参数形式 */
  * 其中一部分记录的关键字均比另一部分的关键字小,则可分别对
  * 这两部分记录继续进行排序,以达到整个序列有序的目的.
  * @param L [description]
- * 已知L->r[s..m]中记录的关键字除L->r[s]之外均满足堆的定义
- * 调整L->r[s]的关键字,使L->r[s..m]成为一个大顶堆
+
  */
 void quick_sort(SqList *L){
     q_sort(L, 1, L->length);
