@@ -67,12 +67,12 @@ void merge(int SR[], int TR[], int i, int m, int n){
     }
     if(i<=m){
         for(l=0; l <= m-i; l++){
-            TR[k+1] = SR[i+1];//将剩余的SR[i..m]复制到TR
+            TR[k+l] = SR[i+l];//将剩余的SR[i..m]复制到TR
         }
     }
     if(j<=n){
         for(l=0; l<=n-j; l++){
-            TR[k+1] = SR[j+1];//将剩余的SR[j..n]复制到TR
+            TR[k+l] = SR[j+l];//将剩余的SR[j..n]复制到TR
         }
     }
 }
